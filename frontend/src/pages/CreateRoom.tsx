@@ -10,7 +10,7 @@ const CreateRoom = () => {
     const createRoomCode = () => {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let code = '';
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 10; i++) {
             code += characters.charAt(Math.floor(Math.random() * characters.length));
         }
         setroomCode(code);
@@ -30,7 +30,7 @@ const CreateRoom = () => {
                     <>
                         <div className="text-xl flex justify-center mt-7">Generate a Room Code</div>
                         <div className="flex justify-center">
-                            <button onClick={() => { createRoomCode() }} className="text-2xl flex border px-4 py-2 cursor-pointer rounded-2xl bg-[#733e0a]/50 mt-7"> Generate</button>
+                            <button onClick={() => { createRoomCode() }} className="text-2xl flex border px-4 py-2 cursor-pointer rounded-2xl hover:opacity-70 bg-[#007BFF]/50 mt-7"> Generate</button>
                         </div>
                     </>
                 }
@@ -51,7 +51,7 @@ const CreateRoom = () => {
                 }
                 {roomCode &&
                     <div className="flex justify-center">
-                        <button onClick={() => { navigate(`/joiningroom/${roomCode}`) }} className="text-xl flex gap-2 justify-center items-center border px-4 py-2 cursor-pointer rounded-2xl bg-[#733e0a]/50 mt-7"> Enter Room{sendIcon()}</button>
+                        <button onClick={() => { navigate(`/joiningroom/${roomCode}`) }} className="text-xl flex gap-2 justify-center items-center border px-4 py-2 cursor-pointer rounded-2xl hover:opacity-70 bg-[#007BFF]/50 mt-7"> Enter Room{sendIcon()}</button>
                     </div>
                 }
             </div>
