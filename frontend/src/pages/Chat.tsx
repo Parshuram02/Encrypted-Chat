@@ -10,7 +10,7 @@ interface Data {
 }
 
 function Chat() {
-    const backendURL = import.meta.env.VITE_BACKEND_URL || "ws://localhost:8080";
+    const backendURL = import.meta.env.VITE_BACKEND_URL || "https://encrypted-chat-0a1v.onrender.com";
     const roomCode = useParams().id;
     const myName = useParams().name ?? "";
     const navigate = useNavigate();
