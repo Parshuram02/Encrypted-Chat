@@ -5,6 +5,9 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   preview: {
-    allowedHosts: ['encrypted-chat-u6xl.onrender.com']
+    allowedHosts: [
+      'encrypted-chat-u6xl.onrender.com',
+      'encrypted-chat-frontend.onrender.com'
+    ]
   }
 })
