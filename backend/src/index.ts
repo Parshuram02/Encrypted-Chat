@@ -27,7 +27,7 @@ wss.on("connection", (socket: WebSocket) => {
 
             allSockets.push(newUser);
 
-            // 🔔 Notify all users in the room
+        
             allSockets
                 .filter((x) => x.room === newUser.room)
                 .forEach((x) =>
@@ -68,7 +68,7 @@ wss.on("connection", (socket: WebSocket) => {
         if (disconnectedUser) {
             allSockets = allSockets.filter((x) => x.socket !== socket);
 
-            // 🔔 Notify others that the user left
+            
             allSockets
                 .filter((x) => x.room === disconnectedUser.room)
                 .forEach((x) =>
