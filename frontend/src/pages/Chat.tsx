@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { sendIcon } from "../icons/sendIcon.tsx";
+import { Send, LogOut } from 'lucide-react';
 import { Input } from '../ui/Input.tsx';
 import { MessageBubble } from '../ui/MessageBubble.tsx';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Data {
-    message: string,
-    senderName: string
+    message: string;
+    senderName: string;
 }
 
 function Chat() {
@@ -24,13 +25,12 @@ function Chat() {
     useEffect(() => {
         const ws = new WebSocket(wsURL);
         ws.onmessage = (event) => {
-            console.log(event);
             const eventData = JSON.parse(event.data);
             setdata(data => [...data, eventData]);
-            console.log(data);
             setMessages(messages => [...messages, eventData.message]);
-        }
+        };
         wsRef.current = ws;
+        
         ws.onopen = () => {
             ws.send(JSON.stringify({
                 type: "join",
@@ -38,9 +38,9 @@ function Chat() {
                     roomId: roomCode,
                     name: myName
                 }
-            }))
-        }
-
+            }));
+        };
+    
         return () => {
             ws.send(JSON.stringify({
                 type: "leave",
@@ -50,8 +50,9 @@ function Chat() {
                 }
             }));
             ws.close();
-        }
-    }, []);
+        };
+    }, [backendURL, roomCode, myName]); // ✅ Added dependencies
+    
 
     useEffect(() => {
         if (messagesEndRef.current) {
@@ -74,39 +75,69 @@ function Chat() {
     }
 
     return (
-        <div className='flex flex-col justify-between w-full h-screen items-center bgimage text-white'>
-            <div className='absolute top-5 right-5'>
-                <button className='bg-red-500 text-white px-4 py-2 rounded' onClick={handleLeaveChat}>
+        <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className='flex flex-col justify-between w-full h-screen gradient-bg'
+        >
+            <div className='flex justify-between items-center p-4 glass-morphism'>
+                <h1 className='text-2xl font-bold text-white'>Room: {roomCode}</h1>
+                <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className='flex items-center gap-2 bg-red-500/80 text-white px-6 py-3 rounded-full button-hover'
+                    onClick={handleLeaveChat}
+                >
+                    <LogOut size={20} />
                     Leave Chat
-                </button>
+                </motion.button>
             </div>
-            <div className={`h-5/6 pt-16 flex flex-col gap-5 overflow-auto w-full justify-start items-end custom-scrollbar`}>
-                {data.map((message, index) => (
-                    <MessageBubble key={index} message={message.message} senderName={message.senderName} myName={myName} />
-                ))}
+
+            <div className='flex-1 p-6 overflow-auto custom-scrollbar'>
+                <AnimatePresence>
+                    {data.map((message, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <MessageBubble 
+                                message={message.message} 
+                                senderName={message.senderName} 
+                                myName={myName} 
+                            />
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
                 <div ref={messagesEndRef} />
             </div>
-            <div className='h-1/6 w-screen p-5 flex justify-between gap-3 text-black'>
-                <Input
-                    type="text"
-                    placeholder="Message"
-                    ref={inputRef}
-                    endIcon={sendIcon()}
-                    width='w-full'
-                    onClick={() => {
-                        if (!inputRef.current) return;
-                        wsRef.current?.send(JSON.stringify({
-                            type: "chat",
-                            payload: {
-                                message: inputRef.current.value,
-                                name: myName
-                            }
-                        }))
-                        inputRef.current.value = "";
-                    }}
-                />
+
+            <div className='p-4 glass-morphism'>
+                <div className='max-w-4xl mx-auto'>
+                    <Input
+                        type="text"
+                        placeholder="Type your message..."
+                        ref={inputRef}
+                        endIcon={<Send className="w-5 h-5 text-gray-600" />}
+                        width='w-full'
+                        className='bg-white/90 rounded-full px-6 py-4 text-lg'
+                        onClick={() => {
+                            if (!inputRef.current?.value.trim()) return;
+                            wsRef.current?.send(JSON.stringify({
+                                type: "chat",
+                                payload: {
+                                    message: inputRef.current.value,
+                                    name: myName
+                                }
+                            }))
+                            inputRef.current.value = "";
+                        }}
+                    />
+                </div>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
