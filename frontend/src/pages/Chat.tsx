@@ -51,7 +51,7 @@ function Chat() {
             }));
             ws.close();
         };
-    }, [backendURL, roomCode, myName]); // ✅ Added dependencies
+    }, [backendURL, roomCode, myName, wsURL]); // ✅ Added dependencies
     
 
     useEffect(() => {
