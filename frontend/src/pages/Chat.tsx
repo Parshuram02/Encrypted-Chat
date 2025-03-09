@@ -11,6 +11,7 @@ interface Data {
 
 function Chat() {
     const backendURL = import.meta.env.VITE_BACKEND_URL || "https://encrypted-chat-0a1v.onrender.com";
+    const wsURL = backendURL.replace(/^http/, 'ws'); // Ensure correct WebSocket URL scheme
     const roomCode = useParams().id;
     const myName = useParams().name ?? "";
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ function Chat() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const ws = new WebSocket(backendURL);
+        const ws = new WebSocket(wsURL);
         ws.onmessage = (event) => {
             console.log(event);
             const eventData = JSON.parse(event.data);
