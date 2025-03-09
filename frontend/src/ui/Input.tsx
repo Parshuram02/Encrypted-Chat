@@ -1,28 +1,54 @@
-import { ReactElement } from "react";
+import { forwardRef, ReactNode } from 'react';
+import { motion } from 'framer-motion';
 
 interface InputProps {
     type: string;
     placeholder: string;
-    ref?: any
-    endIcon?: ReactElement;
-    uppercase?: boolean
-    width: string
-    onClick?: () => void
+    width?: string;
+    endIcon?: ReactNode;
+    uppercase?: boolean;
+    className?: string;
+    onClick?: () => void;
 }
 
-const DefaultStyle = "px-3 py-1 h-3/5 border-2 rounded-2xl flex items-center justify-between outline-none";
-
-export const Input = (props: InputProps) => {
+export const Input = forwardRef<HTMLInputElement, InputProps>(({
+    type,
+    placeholder,
+    width = 'w-full',
+    endIcon,
+    uppercase = false,
+    className = '',
+    onClick
+}, ref) => {
     return (
-        <div className={`${DefaultStyle} ${props.width}`} >
+        <div className={`relative ${width}`}>
             <input
-                className={`flex-1 p-1 outline-none selection:bg-yellow-900/30 ${props.uppercase && "uppercase"}`}
-                type={props.type}
-                placeholder={props.placeholder}
-                ref={props.ref}
-                onKeyDown={(e) => e.key === "Enter" && props.onClick?.()}   // on the click of enter the onClick function will be called
+                type={type}
+                placeholder={placeholder}
+                ref={ref}
+                className={`
+                    w-full pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500
+                    ${uppercase ? 'uppercase' : ''}
+                    ${className}
+                `}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' && onClick) {
+                        onClick();
+                    }
+                }}
             />
-            {props.endIcon && <span className="ml-2 cursor-pointer" onClick={props.onClick}>{props.endIcon}</span>}
+            {endIcon && (
+                <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                    onClick={onClick}
+                >
+                    {endIcon}
+                </motion.button>
+            )}
         </div>
     );
-};
+});
+
+Input.displayName = 'Input';

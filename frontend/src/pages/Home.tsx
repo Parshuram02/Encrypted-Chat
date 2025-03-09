@@ -1,59 +1,94 @@
-import { sendIcon } from "../icons/sendIcon";
+import { MessageSquare, Shield, UserPlus, Lock, Heart } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
+import { motion } from 'framer-motion';
+
 const Home = () => {
     const navigate = useNavigate();
-    return (
-        <div className='w-screen sm:h-screen h-full  flex flex-col justify-start items-center bg-gradient-to-br from-[#6A5ACD] via-[#4682B4] to-[#87CEEB]'>
-            <div className="text-5xl  flex justify-center text-center uppercase font-semibold mt-14 font-mono">
-                Echo-Chat
-            </div>
-            <div className="flex flex-wrap-reverse w-full p-4 mt-14 justify-evenly gap-10 items-center">
-                <div className="flex flex-col justify-center items-center gap-7">
-                    <div>
-                        <div className="p-6 font-semibold  text-3xl font-mono flex items-center gap-5">
-                            <div>
-                                {sendIcon()}
-                            </div>
-                            Chat Safely ,Stay Close!
-                        </div>
-                        <div className="p-6 font-semibold  text-3xl font-mono flex items-center gap-5">
-                            <div>
-                                {sendIcon()}
-                            </div>
-                            We Do not save your messages.
-                        </div>
-                        <div className="p-6 font-semibold  text-3xl font-mono flex items-center gap-5">
-                            <div>
-                                {sendIcon()}
-                            </div>
-                           Talk Freely, No Login/Register Required
-                        </div>
-                        <div className="p-6 font-semibold text-3xl font-mono flex items-center gap-5">
-                            <div>
-                                {sendIcon()}
-                            </div>
-                            Have secured chats with anyone.
-                        </div>
-                        <div className="p-6 font-semibold text-3xl font-mono flex items-center gap-5">
-                            <div>
-                                {sendIcon()}
-                            </div>
-                            Having fun? Let us Know!
-                        </div>
-                    </div>
-                </div>
-                <div className='sm:w-1/3 sm:h-fit pb-7 w-fit px-5 h-fit bg-white/50 shadow-xl rounded-4xl border'>
-                    <div className="text-4xl flex justify-center text-center uppercase font-semibold mt-7 font-mono">
-                        Start Fun Chat Here
-                    </div>
-                    <div className="flex justify-center gap-4">
-                        <button onClick={() => { navigate("/createroom") }} className="text-2xl flex border px-4 py-2 cursor-pointer rounded-2xl bg-[#007BFF]/50 mt-7 hover:opacity-70"> Create Room</button>
-                        <button onClick={() => {navigate("/joinroom") }} className="text-2xl flex border px-4 py-2 cursor-pointer rounded-2xl bg-[#007BFF]/50 mt-7 hover:opacity-70"> Join Room</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
 
-export default Home
+    const features = [
+        { icon: <Shield size={28} />, text: "Chat Safely, Stay Close!" },
+        { icon: <Lock size={28} />, text: "We Do Not Save Your Messages" },
+        { icon: <UserPlus size={28} />, text: "Talk Freely, No Login Required" },
+        { icon: <MessageSquare size={28} />, text: "Have Secured Chats with Anyone" },
+        { icon: <Heart size={28} />, text: "Having Fun? Let Us Know!" }
+    ];
+
+    return (
+        <div className='min-h-screen gradient-bg'>
+            <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className='container mx-auto px-4 py-8'
+            >
+                <motion.h1 
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    className="text-6xl text-center font-bold text-white mb-12 tracking-wider"
+                >
+                    Echo-Chat
+                </motion.h1>
+
+                <div className="flex flex-col lg:flex-row justify-between items-center gap-12 mt-8">
+                    <motion.div 
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="lg:w-1/2"
+                    >
+                        <div className="space-y-6">
+                            {features.map((feature, index) => (
+                                <motion.div
+                                    key={index}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                    className="glass-morphism p-6 rounded-xl flex items-center gap-4 transform hover:scale-105 transition-transform"
+                                >
+                                    <div className="text-white">
+                                        {feature.icon}
+                                    </div>
+                                    <h3 className="text-xl text-white font-semibold">
+                                        {feature.text}
+                                    </h3>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </motion.div>
+
+                    <motion.div 
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="lg:w-1/2 max-w-md w-full"
+                    >
+                        <div className="glass-morphism p-8 rounded-2xl">
+                            <h2 className="text-3xl font-bold text-white text-center mb-8">
+                                Start Chatting Now
+                            </h2>
+                            <div className="space-y-4">
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => navigate("/createroom")}
+                                    className="w-full bg-blue-500 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-blue-600 transition-colors shadow-lg"
+                                >
+                                    Create Room
+                                </motion.button>
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => navigate("/joinroom")}
+                                    className="w-full bg-purple-500 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-purple-600 transition-colors shadow-lg"
+                                >
+                                    Join Room
+                                </motion.button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            </motion.div>
+        </div>
+    );
+};
+
+export default Home;
